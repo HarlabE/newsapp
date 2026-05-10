@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:newsapp/home_page.dart';
 import 'package:newsapp/login.dart';
 import 'package:newsapp/news_page.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
-  // await dotenv.load(fileName: ".env");
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.white,
         ),
       ),
-      home: const Login(),
+      home: Login(),
     );
   }
 }

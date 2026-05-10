@@ -13,6 +13,7 @@ class HomePage extends StatelessWidget {
 Widget _body(BuildContext context) {
   return Center(
     child: Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(height: 30),
         Image.asset('assets/images/logo.png', width: 300),

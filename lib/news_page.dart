@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:newsapp/login.dart';
+import 'package:newsapp/models/article.dart';
+import 'package:newsapp/newsitem.dart';
 import 'package:newsapp/services/new_service.dart';
 
 class NewPage extends StatefulWidget {
@@ -10,27 +12,48 @@ class NewPage extends StatefulWidget {
 }
 
 class _NewPageState extends State<NewPage> {
-  StatefulWidget login = Login();
-  NewService newService = NewService();
-  String text = 'locomotive';
+  final NewService _newService = NewService();
+
+  late Future<List<Article>> _headlines;
   @override
   void initState() {
-     final newPageState = newService.getHeadlines();
+    _headlines = _newService.getHeadlines();
     super.initState();
   }
-   
-   
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('News Page')),
-
-      // drawer: Drawer(),
-      body: ListView.builder(
-        itemCount: ,
-        itemBuilder: (context, index) {}
-      ), // a
+      body: FutureBuilder<List<Article>>(
+        future: _headlines,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                children: [
+                  Text('${snapshot.error}'),
+                  ElevatedButton(onPressed: () {}, child: Text('Retry')),
+                ],
+              ),
+            );
+          }
+          final articles = snapshot.data!;
+          if (articles.isEmpty) {
+            return Center(child: Text('No article found'));
+          }
+          return ListView.separated(
+            itemBuilder: (context, index) {
+              return Item(article: articles[index]);
+            },
+            separatorBuilder: (context, index) => SizedBox(height: 8),
+            itemCount: articles.length,
+          );
+        },
+      ),
       bottomNavigationBar: Text('bottom nav'),
     );
   }
